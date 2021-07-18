@@ -18,6 +18,7 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     if @post.save
+      current_user.add_role :creator, @post
       redirect_to @post, notice: "Post was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -26,6 +27,7 @@ class PostsController < ApplicationController
 
   def update
     if @post.update(post_params)
+      current_user.add_role :editor, @post
       redirect_to @post, notice: "Post was successfully updated."
     else
       render :edit, status: :unprocessable_entity
